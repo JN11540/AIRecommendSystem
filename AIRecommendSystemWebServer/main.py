@@ -1,6 +1,7 @@
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
 import model  # noqa: F401 — registers all ORM models before create_all
@@ -29,6 +30,13 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(title="AI Recommend System", lifespan=lifespan)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["https://airecommendsystemwebclient-production.up.railway.app"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
