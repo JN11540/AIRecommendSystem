@@ -5,7 +5,8 @@ COPY AIRecommendSystemWebServer/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY AIRecommendSystemWebServer/ ./AIRecommendSystemWebServer/
-COPY AIRecommendSystemWebClient/ ./AIRecommendSystemWebClient/
+RUN mkdir -p ./AIRecommendSystemWebClient/www/template \
+             ./AIRecommendSystemWebClient/www/static
 
 WORKDIR /app/AIRecommendSystemWebServer
 EXPOSE 8000
