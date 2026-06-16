@@ -1,0 +1,35 @@
+services:
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER:     aisystem
+      POSTGRES_PASSWORD: Damn13258
+      POSTGRES_DB:       aisystem_db
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U aisystem"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: .
+      dockerfile: AIRecommendSystemWebServer/Dockerfile
+    environment:
+      POSTGRES_URI: postgresql+asyncpg://aisystem:Damn13258@db:5432/aisystem_db
+    depends_on:
+      db:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./AIRecommendSystemWebClient
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
+volumes:
+  pgdata:
